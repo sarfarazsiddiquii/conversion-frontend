@@ -1,29 +1,79 @@
 'use client'
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+
+const units = ['Meter', 'Kilometer', 'Centimeter', 'Millimeter', 'Micrometer', 'Nanometer', 'Mile', 'Yard', 'Foot', 'Inch', 'Light Year'];
 
 export default function ConversionResult() {
   const params = useParams();
-  const { number, conversion } = params as { number: string, conversion: string };
+  const router = useRouter();
+  const { number, conversion } = params;
+  const [result, setResult] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [newUnit, setNewUnit] = useState<string>('');
 
-  const convertUnits = (num: string, from: string, to: string) => {
-    // This is a placeholder. You'll need to implement the actual conversion logic.
-    return `${num} ${from} is equal to X ${to}`;
+  const [fromUnit, toUnit] = conversion?.toString().split('-to-') || [];
+
+  useEffect(() => {
+    fetchResult(number?.toString(), fromUnit, toUnit);
+  }, [number, fromUnit, toUnit]);
+
+  const fetchResult = async (value: string | undefined, from: string, to: string) => {
+    if (!value || !from || !to) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/convert?value=${value}&from=${from}&to=${to}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setResult(data.result);
+    } catch (error) {
+      setError('Failed to fetch conversion result');
+      console.error('Error:', error);
+    }
   };
 
-  if (number && conversion && typeof conversion === 'string') {
-    const [fromUnit, toUnit] = conversion.split('-to-');
-    const result = convertUnits(number as string, fromUnit, toUnit);
+  const handleNewConversion = () => {
+    if (result !== null && newUnit) {
+      router.push(`/${result}/${toUnit}-to-${newUnit.toLowerCase()}`);
+    }
+  };
 
-    return (
-      <div>
+  return (
+    <div>
+      <header>
         <h1>Conversion Result</h1>
-        <p>{result}</p>
-        <Link href="/">Back to Converter</Link>
-      </div>
-    );
-  }
-
-  return <div>Loading...</div>;
+      </header>
+      <main className="container">
+        <div className="result">
+          {error ? (
+            <p className="error">{error}</p>
+          ) : result === null ? (
+            <p>Loading...</p>
+          ) : (
+            <p>{number} {fromUnit} is equal to {result} {toUnit}</p>
+          )}
+        </div>
+        <div className="new-conversion">
+          <h2>Convert to another unit:</h2>
+          <select value={newUnit} onChange={(e) => setNewUnit(e.target.value)}>
+            <option value="">Select new unit</option>
+            {units.filter(unit => unit.toLowerCase() !== toUnit).map(unit => (
+              <option key={unit} value={unit}>{unit}</option>
+            ))}
+          </select>
+          <button onClick={handleNewConversion} disabled={!newUnit}>Convert</button>
+        </div>
+        <Link href="/">
+          <button>Back to Converter</button>
+        </Link>
+      </main>
+      <footer>
+        <p>&copy; 2024 Unit Converter. All rights reserved.</p>
+      </footer>
+    </div>
+  );
 }
