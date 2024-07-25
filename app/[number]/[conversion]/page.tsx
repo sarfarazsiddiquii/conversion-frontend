@@ -3,8 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-const units = ['Meter', 'Kilometer', 'Centimeter', 'Millimeter', 'Micrometer', 'Nanometer', 'Mile', 'Yard', 'Foot', 'Inch', 'Light Year'];
+import Dropdown from '../../../components/Dropdown';
 
 export default function ConversionResult() {
   const params = useParams();
@@ -43,33 +42,32 @@ export default function ConversionResult() {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <header>
         <h1>Conversion Result</h1>
       </header>
-      <main className="container">
-        <div className="result">
-          {error ? (
-            <p className="error">{error}</p>
-          ) : result === null ? (
-            <p>Loading...</p>
-          ) : (
-            <p>{number} {fromUnit} is equal to {result} {toUnit}</p>
-          )}
+      <main className="main-container">
+        <div className="converter-form">
+          <div className="result">
+            {error ? (
+              <p className="error">{error}</p>
+            ) : result === null ? (
+              <p>Loading...</p>
+            ) : (
+              <p>{number} {fromUnit} is equal to {result} {toUnit}</p>
+            )}
+          </div>
+          <div className="new-conversion">
+            <h2>Convert to another unit:</h2>
+            <Dropdown selectedUnit={newUnit} setSelectedUnit={setNewUnit} />
+            <button className="convert-button" onClick={handleNewConversion} disabled={!newUnit}>
+              Convert
+            </button>
+          </div>
+          <Link href="/">
+            <button className="back-button">Back to Converter</button>
+          </Link>
         </div>
-        <div className="new-conversion">
-          <h2>Convert to another unit:</h2>
-          <select value={newUnit} onChange={(e) => setNewUnit(e.target.value)}>
-            <option value="">Select new unit</option>
-            {units.filter(unit => unit.toLowerCase() !== toUnit).map(unit => (
-              <option key={unit} value={unit}>{unit}</option>
-            ))}
-          </select>
-          <button onClick={handleNewConversion} disabled={!newUnit}>Convert</button>
-        </div>
-        <Link href="/">
-          <button>Back to Converter</button>
-        </Link>
       </main>
       <footer>
         <p>&copy; 2024 Unit Converter. All rights reserved.</p>
@@ -77,3 +75,4 @@ export default function ConversionResult() {
     </div>
   );
 }
+ 
