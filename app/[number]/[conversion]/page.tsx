@@ -34,13 +34,6 @@ export default function ConversionResult() {
       console.error('Error:', error);
     }
   };
-
-  const handleNewConversion = () => {
-    if (result !== null && newUnit) {
-      router.push(`/${result}/${toUnit}-to-${newUnit.toLowerCase()}`);
-    }
-  };
-
   return (
     <div className="app-container">
       <header>
