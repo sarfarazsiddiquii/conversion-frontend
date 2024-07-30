@@ -89,49 +89,43 @@ footer {
 }
 
 
-.dropdown-button {
-  width: 100%;
-  padding: 10px;
-  background-color: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: left;
-  font-size: 1rem;
-}
-
-/* Ensure dropdown doesn't overflow its container */
+/* Dropdown styles */
 .dropdown {
   position: relative;
-  width: 100%; /* Ensures dropdown doesn’t exceed parent container */
+  display: inline-block;
+  width: 100%;
+  max-width: 350px; /* Adjust as needed */
+}
+
+.dropdown-selected {
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 65px;
 }
 
 .dropdown-list {
   position: absolute;
-  width: 100%; /* Match the width of the dropdown button */
-  top: 100%; /* Position below the dropdown button */
-  left: 0;
-  z-index: 1000; /* Ensure dropdown is on top of other content */
   background-color: white;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  overflow-y: auto;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  max-height: 200px; /* Adjust as needed */
+  overflow-y: auto; /* Enable scrolling for long lists */
 }
 
-
-
-
 .dropdown-item {
-  padding: 10px;
+  padding: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  border: 1px solid transparent;
 }
 
 .dropdown-item:hover, .dropdown-item.selected {
-  background-color: var(--hover-color);
-  color: white;
-  border-color: var(--hover-color);
+  background-color: #ddd;
 }
 
 .convert-button,
@@ -158,8 +152,7 @@ footer {
   cursor: not-allowed;
 }
 
-/* Base styles */
-body {
+* {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -195,6 +188,12 @@ body {
   padding: 10px 0;
 }
 
+@media (min-width: 768px) {
+  .dropdown {
+    max-width: 200px; /* Adjust as needed for desktop */
+  }
+}
+
 /* Mobile styles */
 @media (max-width: 600px) {
   .unit-selection {
@@ -214,7 +213,7 @@ body {
     width: calc(100% - 20px); /* Adjust width slightly less than 100% to allow for padding */
     max-height: 200px; /* Adjust max-height for better dropdown view */
   }
-  
+
   .container {
     padding: 10px;
   }
