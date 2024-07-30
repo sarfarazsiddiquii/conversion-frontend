@@ -13,7 +13,7 @@ export default function ConversionResult() {
   const [error, setError] = useState<string | null>(null);
   const [newUnit, setNewUnit] = useState<string>('');
 
-  const [fromUnit, toUnit] = conversion?.toString().split('-to-') || [];
+  const [fromUnit, toUnit] = conversion ? conversion.toString().split('-to-') : ['', ''];
 
   useEffect(() => {
     fetchResult(number?.toString(), fromUnit, toUnit);
