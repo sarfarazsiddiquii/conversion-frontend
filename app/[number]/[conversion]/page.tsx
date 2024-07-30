@@ -8,18 +8,18 @@ import Dropdown from '../../../components/Dropdown';
 export default function ConversionResult() {
   const params = useParams();
   const router = useRouter();
-  const { number, conversion } = params;
+  const { number, conversion } = params as { number: string, conversion: string };
   const [result, setResult] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [newUnit, setNewUnit] = useState<string>('');
 
-  const [fromUnit, toUnit] = conversion ? conversion.toString().split('-to-') : ['', ''];
+  const [fromUnit, toUnit] = conversion ? conversion.split('-to-') : ['', ''];
 
   useEffect(() => {
-    fetchResult(number?.toString(), fromUnit, toUnit);
+    fetchResult(number, fromUnit, toUnit);
   }, [number, fromUnit, toUnit]);
 
-  const fetchResult = async (value: string | undefined, from: string, to: string) => {
+  const fetchResult = async (value: string, from: string, to: string) => {
     if (!value || !from || !to) return;
 
     try {
@@ -34,6 +34,13 @@ export default function ConversionResult() {
       console.error('Error:', error);
     }
   };
+
+  const handleNewConversion = () => {
+    if (newUnit) {
+      router.push(`/number/${number}/${fromUnit}-to-${newUnit}`);
+    }
+  };
+
   return (
     <div className="app-container">
       <header>
@@ -68,4 +75,3 @@ export default function ConversionResult() {
     </div>
   );
 }
- 
