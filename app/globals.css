@@ -88,10 +88,6 @@ footer {
   margin-bottom: 1rem;
 }
 
-.dropdown {
-  position: relative;
-  width: 100%;
-}
 
 .dropdown-button {
   width: 100%;
@@ -104,17 +100,26 @@ footer {
   font-size: 1rem;
 }
 
+/* Ensure dropdown doesn't overflow its container */
+.dropdown {
+  position: relative;
+  width: 100%; /* Ensures dropdown doesn’t exceed parent container */
+}
+
 .dropdown-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 10px;
+  position: absolute;
+  width: 100%; /* Match the width of the dropdown button */
+  top: 100%; /* Position below the dropdown button */
+  left: 0;
+  z-index: 1000; /* Ensure dropdown is on top of other content */
   background-color: white;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  max-height: 300px;
   overflow-y: auto;
 }
+
+
+
 
 .dropdown-item {
   padding: 10px;
@@ -151,4 +156,110 @@ footer {
 .convert-button:disabled {
   background-color: var(--border-color);
   cursor: not-allowed;
+}
+
+/* Base styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.content {
+  margin: 20px 0;
+}
+
+.footer {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .unit-selection {
+    flex-direction: column;
+    align-items: center;  /* Center-align the elements for better spacing and aesthetics */
+  }
+  .unit-selection > div {
+    width: 100%; /* Full width for each input and dropdown */
+    margin-bottom: 1rem; /* Add some margin at the bottom for spacing */
+  }
+
+  .number-input, .dropdown-button {
+    width: 100%; /* Ensure full width for the number input and dropdown button */
+  }
+
+  .dropdown-list {
+    width: calc(100% - 20px); /* Adjust width slightly less than 100% to allow for padding */
+    max-height: 200px; /* Adjust max-height for better dropdown view */
+  }
+  
+  .container {
+    padding: 10px;
+  }
+
+  .header, .footer {
+    padding: 5px 0;
+  }
+
+  .content {
+    margin: 10px 0;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header, .footer {
+    padding: 8px 0;
+  }
+
+  .content {
+    margin: 15px 0;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .container {
+    padding: 20px;
+  }
+
+  .header, .footer {
+    padding: 10px 0;
+  }
+
+  .content {
+    margin: 20px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .dropdown-list {
+    max-height: 200px; /* Adjust height for smaller screens */
+  }
 }
