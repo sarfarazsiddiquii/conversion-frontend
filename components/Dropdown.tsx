@@ -2,14 +2,19 @@ import { useState } from 'react';
 
 const units = ['Meter', 'Kilometer', 'Centimeter', 'Millimeter', 'Micrometer', 'Nanometer', 'Mile', 'Yard', 'Foot', 'Inch', 'Light Year'];
 
-export default function Dropdown({ selectedUnit, setSelectedUnit }) {
+interface DropdownProps {
+  selectedUnit: string;
+  setSelectedUnit: (unit: string) => void;
+}
+
+export default function Dropdown({ selectedUnit, setSelectedUnit }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSelect = (unit) => {
+  const handleSelect = (unit: string) => {
     setSelectedUnit(unit);
     setIsOpen(false);
   };
