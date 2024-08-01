@@ -23,7 +23,7 @@ export default function ConversionResult() {
     if (!value || !from || !to) return;
 
     try {
-      const response = await fetch(`https://68.183.117.47/api/convert?value=${value}&from=${from}&to=${to}`);
+      const response = await fetch(`https://test.cm-inch.com/api/convert?value=${value}&from=${from}&to=${to}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
