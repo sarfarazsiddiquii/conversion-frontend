@@ -27,7 +27,7 @@ export default function ConversionResult() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
+      const data = await response.json();           
       setResult(data.result);
     } catch (error) {
       setError('Failed to fetch conversion result');
@@ -37,7 +37,7 @@ export default function ConversionResult() {
 
   const handleNewConversion = () => {
     if (newUnit) {
-      router.push(`/number/${number}/${fromUnit}-to-${newUnit}`);
+      router.push(`/${number}/${fromUnit.toLowerCase()}-to-${toUnit.toLowerCase()}`);
     }
   };
 
