@@ -1,45 +1,30 @@
-'use client'
-
-import { useParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Dropdown from '../../../components/Dropdown';
+import NewConversionForm from '../../../components/NewConversionForm';
 
-export default function ConversionResult() {
-  const params = useParams();
-  const router = useRouter();
-  const { number, conversion } = params as { number: string, conversion: string };
-  const [result, setResult] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [newUnit, setNewUnit] = useState<string>('');
+interface ConversionResultProps {
+  params: {
+    number: string;
+    conversion: string;
+  };
+}
 
+async function getConversionResult(number: string, fromUnit: string, toUnit: string) {
+  try {
+    const response = await fetch(`https://test.cm-inch.com/api/convert?value=${number}&from=${fromUnit}&to=${toUnit}`, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return { result: data.result, error: null };
+  } catch (error) {
+    return { result: null, error: 'Failed to fetch conversion result' };
+  }
+}
+
+export default async function ConversionResult({ params }: ConversionResultProps) {
+  const { number, conversion } = params;
   const [fromUnit, toUnit] = conversion ? conversion.split('-to-') : ['', ''];
-
-  useEffect(() => {
-    fetchResult(number, fromUnit, toUnit);
-  }, [number, fromUnit, toUnit]);
-
-  const fetchResult = async (value: string, from: string, to: string) => {
-    if (!value || !from || !to) return;
-
-    try {
-      const response = await fetch(`https://test.cm-inch.com/api/convert?value=${value}&from=${from}&to=${to}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();           
-      setResult(data.result);
-    } catch (error) {
-      setError('Failed to fetch conversion result');
-      console.error('Error:', error);
-    }
-  };
-
-  const handleNewConversion = () => {
-    if (newUnit) {
-      router.push(`/${number}/${fromUnit.toLowerCase()}-to-${toUnit.toLowerCase()}`);
-    }
-  };
+  const { result, error } = await getConversionResult(number, fromUnit, toUnit);
 
   return (
     <div className="app-container">
@@ -51,19 +36,11 @@ export default function ConversionResult() {
           <div className="result">
             {error ? (
               <p className="error">{error}</p>
-            ) : result === null ? (
-              <p>Loading...</p>
             ) : (
-              <p>{number} {fromUnit} is equal to {result} {toUnit}</p>
+              <p>{number} {fromUnit} is equal to {result !== null ? result.toString() : '...'} {toUnit}</p>
             )}
           </div>
-          <div className="new-conversion">
-            <h2>Convert to another unit:</h2>
-            <Dropdown selectedUnit={newUnit} setSelectedUnit={setNewUnit} />
-            <button className="convert-button" onClick={handleNewConversion} disabled={!newUnit}>
-              Convert
-            </button>
-          </div>
+          <NewConversionForm number={number} fromUnit={fromUnit} />
           <Link href="/">
             <button className="back-button">Back to Converter</button>
           </Link>
