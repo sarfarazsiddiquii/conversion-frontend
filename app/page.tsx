@@ -7,8 +7,8 @@ import Dropdown from '../components/Dropdown';
 export default function ConversionPage() {
   const router = useRouter();
   const [number, setNumber] = useState('');
-  const [fromUnit, setFromUnit] = useState('');
-  const [toUnit, setToUnit] = useState('');
+  const [fromUnit, setFromUnit] = useState('centimetre');
+  const [toUnit, setToUnit] = useState('inch');
 
   const handleConversion = () => {
     if (number && fromUnit && toUnit) {
