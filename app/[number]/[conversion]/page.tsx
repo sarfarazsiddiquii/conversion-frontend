@@ -1,5 +1,5 @@
+import ConversionForm from './ConversionForm';
 import Link from 'next/link';
-import NewConversionForm from '../../../components/NewConversionForm';
 
 interface ConversionResultProps {
   params: {
@@ -32,19 +32,15 @@ export default async function ConversionResult({ params }: ConversionResultProps
         <h1>Conversion Result</h1>
       </header>
       <main className="main-container">
-        <div className="converter-form">
-          <div className="result">
-            {error ? (
-              <p className="error">{error}</p>
-            ) : (
-              <p>{number} {fromUnit} is equal to {result !== null ? result.toString() : '...'} {toUnit}</p>
-            )}
-          </div>
-          <NewConversionForm number={number} fromUnit={fromUnit} />
-          <Link href="/">
-            <button className="back-button">Back to Converter</button>
-          </Link>
-        </div>
+        <ConversionForm
+          initialNumber={number}
+          initialFromUnit={fromUnit}
+          initialToUnit={toUnit}
+          initialResult={result}
+        />
+        <Link href="/">
+          <button className="back-button">Back to Converter</button>
+        </Link>
       </main>
       <footer>
         <p>&copy; 2024 Unit Converter. All rights reserved.</p>
