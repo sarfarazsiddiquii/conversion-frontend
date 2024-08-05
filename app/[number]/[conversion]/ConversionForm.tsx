@@ -26,22 +26,29 @@ async function getConversionResult(number: string, fromUnit: string, toUnit: str
 
 export default function ConversionForm({ initialNumber, initialFromUnit, initialToUnit, initialResult }: ConversionFormProps) {
   const router = useRouter();
-  const [number, setNumber] = useState(initialNumber);
-  const [fromUnit, setFromUnit] = useState(initialFromUnit);
-  const [toUnit, setToUnit] = useState(initialToUnit);
+  const [inputNumber, setInputNumber] = useState(initialNumber);
+  const [inputFromUnit, setInputFromUnit] = useState(initialFromUnit);
+  const [inputToUnit, setInputToUnit] = useState(initialToUnit);
+  
+  const [displayNumber, setDisplayNumber] = useState(initialNumber);
+  const [displayFromUnit, setDisplayFromUnit] = useState(initialFromUnit);
+  const [displayToUnit, setDisplayToUnit] = useState(initialToUnit);
   const [result, setResult] = useState<number | null>(initialResult);
   const [error, setError] = useState<string | null>(null);
 
   const handleConversion = async () => {
-    if (number && fromUnit && toUnit) {
-      const { result, error } = await getConversionResult(number, fromUnit, toUnit);
+    if (inputNumber && inputFromUnit && inputToUnit) {
+      const { result, error } = await getConversionResult(inputNumber, inputFromUnit, inputToUnit);
       if (error) {
         setError(error);
       } else {
         setResult(result);
         setError(null);
+        setDisplayNumber(inputNumber);
+        setDisplayFromUnit(inputFromUnit);
+        setDisplayToUnit(inputToUnit);
         // Update URL without adding query parameters
-        router.push(`/${number}/${fromUnit.toLowerCase()}-to-${toUnit.toLowerCase()}`, { scroll: false });
+        router.push(`/${inputNumber}/${inputFromUnit.toLowerCase()}-to-${inputToUnit.toLowerCase()}`, { scroll: false });
       }
     }
   };
@@ -52,7 +59,7 @@ export default function ConversionForm({ initialNumber, initialFromUnit, initial
         {error ? (
           <p className="error">{error}</p>
         ) : (
-          <p>{number} {fromUnit} is equal to {result !== null ? result.toString() : '...'} {toUnit}</p>
+          <p>{displayNumber} {displayFromUnit} is equal to {result !== null ? result.toString() : '...'} {displayToUnit}</p>
         )}
       </div>
 
@@ -62,21 +69,21 @@ export default function ConversionForm({ initialNumber, initialFromUnit, initial
           <label>Number</label>
           <input
             type="number"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
+            value={inputNumber}
+            onChange={(e) => setInputNumber(e.target.value)}
             className="number-input"
           />
         </div>
         <div>
           <label>From</label>
-          <Dropdown selectedUnit={fromUnit} setSelectedUnit={setFromUnit} />
+          <Dropdown selectedUnit={inputFromUnit} setSelectedUnit={setInputFromUnit} />
         </div>
         <div>
           <label>To</label>
-          <Dropdown selectedUnit={toUnit} setSelectedUnit={setToUnit} />
+          <Dropdown selectedUnit={inputToUnit} setSelectedUnit={setInputToUnit} />
         </div>
       </div>
-      <button className="convert-button" onClick={handleConversion} disabled={!number || !fromUnit || !toUnit}>
+      <button className="convert-button" onClick={handleConversion} disabled={!inputNumber || !inputFromUnit || !inputToUnit}>
         Convert
       </button>
     </div>
