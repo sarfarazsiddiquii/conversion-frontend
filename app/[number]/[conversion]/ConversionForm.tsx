@@ -1,8 +1,10 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Dropdown from '../../../components/Dropdown';
+import styles from './ConversionForm.module.css';
 
 interface ConversionFormProps {
   initialNumber: string;
@@ -29,12 +31,14 @@ export default function ConversionForm({ initialNumber, initialFromUnit, initial
   const [inputNumber, setInputNumber] = useState(initialNumber);
   const [inputFromUnit, setInputFromUnit] = useState(initialFromUnit);
   const [inputToUnit, setInputToUnit] = useState(initialToUnit);
-  
+
   const [displayNumber, setDisplayNumber] = useState(initialNumber);
   const [displayFromUnit, setDisplayFromUnit] = useState(initialFromUnit);
   const [displayToUnit, setDisplayToUnit] = useState(initialToUnit);
   const [result, setResult] = useState<number | null>(initialResult);
   const [error, setError] = useState<string | null>(null);
+
+  const otherUnits = ['Meter', 'Kilometer', 'Centimeter', 'Millimeter', 'Micrometer', 'Nanometer', 'Mile', 'Yard', 'Foot', 'Inch', 'Light Year'];
 
   const handleConversion = async () => {
     if (inputNumber && inputFromUnit && inputToUnit) {
@@ -47,31 +51,30 @@ export default function ConversionForm({ initialNumber, initialFromUnit, initial
         setDisplayNumber(inputNumber);
         setDisplayFromUnit(inputFromUnit);
         setDisplayToUnit(inputToUnit);
-        // Update URL without adding query parameters
         router.push(`/${inputNumber}/${inputFromUnit.toLowerCase()}-to-${inputToUnit.toLowerCase()}`, { scroll: false });
       }
     }
   };
 
   return (
-    <div className="converter-form">
-      <div className="result">
+    <div className={styles['converter-form']}>
+      <div className={styles.result}>
         {error ? (
-          <p className="error">{error}</p>
+          <p className={styles.error}>{error}</p>
         ) : (
           <p>{displayNumber} {displayFromUnit} is equal to {result !== null ? result.toString() : '...'} {displayToUnit}</p>
         )}
       </div>
 
       <h2>Convert Number to Another Unit</h2>
-      <div className="unit-selection">
+      <div className={styles['unit-selection']}>
         <div>
           <label>Number</label>
           <input
             type="number"
             value={inputNumber}
             onChange={(e) => setInputNumber(e.target.value)}
-            className="number-input"
+            className={styles['number-input']}
           />
         </div>
         <div>
@@ -83,9 +86,24 @@ export default function ConversionForm({ initialNumber, initialFromUnit, initial
           <Dropdown selectedUnit={inputToUnit} setSelectedUnit={setInputToUnit} />
         </div>
       </div>
-      <button className="convert-button" onClick={handleConversion} disabled={!inputNumber || !inputFromUnit || !inputToUnit}>
+      <button className={styles['convert-button']} onClick={handleConversion} disabled={!inputNumber || !inputFromUnit || !inputToUnit}>
         Convert
       </button>
+
+      <div className={styles['other-conversions']}>
+        <h3>Other Conversions for {displayNumber} {displayFromUnit}</h3>
+        <ul>
+          {otherUnits.map((unit) => (
+            unit !== displayToUnit && (
+              <li key={unit}>
+                <Link href={`/${displayNumber}/${displayFromUnit.toLowerCase()}-to-${unit.toLowerCase()}`}>
+                  {displayNumber} {displayFromUnit} to {unit}
+                </Link>
+              </li>
+            )
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

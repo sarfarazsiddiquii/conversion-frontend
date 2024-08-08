@@ -1,5 +1,6 @@
 import ConversionForm from './ConversionForm';
 import Link from 'next/link';
+import styles from './ConversionForm.module.css';
 
 interface ConversionResultProps {
   params: {
@@ -39,7 +40,6 @@ export default async function ConversionResult({ params }: ConversionResultProps
           initialResult={result}
         />
         <Link href="/">
-          <button className="back-button">Back to Converter</button>
         </Link>
       </main>
       <footer>

@@ -19,7 +19,7 @@ export default function ConversionPage() {
   return (
     <div className="app-container">
       <header>
-        <h1>Cm To Inch </h1>
+        <h1>Cm To Inch</h1>
         <p>Our easy to use calculator allows you to convert centimeters to other units of length, such as inches, meters, and feet.</p>
         <p>Do not want to convert from centimeters? Not a problem. Simply choose another unit of length from the list of drop-down options.</p>
       </header>
